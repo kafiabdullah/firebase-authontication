@@ -57,6 +57,13 @@ function App() {
 
   }
 
+  const handleSubmit = () =>{
+
+  }
+
+  const handleBlur = (event) => {
+    console.log(event.target.name ,event.target.value);
+  }
 
 
 
@@ -74,6 +81,12 @@ function App() {
           <img src={user.photo} alt="" />
         </div>
       }
+      <h1>Our Authentication system</h1>
+      <form onSubmit={handleSubmit}>
+        <input type="email" onBlur={handleBlur} required name="email" id="" placeholder="enter your email" /> <br />
+        <input type="password" onBlur={handleBlur} required name="password" placeholder="enter your password" id="" /> <br />
+        <input type="submit" name="signup" value="Sign Up" />
+      </form>
     </div>
   );
 }
