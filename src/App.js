@@ -57,12 +57,27 @@ function App() {
 
   }
 
-  const handleSubmit = () =>{
+  const handleSubmit = () => {
 
   }
 
   const handleBlur = (event) => {
-    console.log(event.target.name ,event.target.value);
+    console.log(event.target.name, event.target.value);
+
+    // email and password validation method
+    if (event.target.name === 'email') {
+      const isEmailValid = /\S+@\S+\.\S+/.test(event.target.value);
+      console.log(isEmailValid);
+
+    }
+
+    if (event.target.name === 'password') {
+      const checkPasswordValid = event.target.value.length > 6;
+      
+
+      const checkPasswordNumber = /\d{1}/.test(event.target.value);
+      console.log(checkPasswordValid && checkPasswordNumber);
+    }
   }
 
 
@@ -76,7 +91,7 @@ function App() {
       {
         user.isSignedIn &&
         <div>
-          <p>Welcome ,{user.name}</p>
+          <p>Welcome, {user.name}</p>
           <p>Email: {user.email}</p>
           <img src={user.photo} alt="" />
         </div>
