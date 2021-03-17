@@ -44,7 +44,9 @@ function App() {
           isSignedIn: false,
           name: '',
           email: '',
-          photo: ''
+          photo: '',
+          error: '',
+          success: ''
         }
         setUser(signOutUser);
 
@@ -57,7 +59,29 @@ function App() {
 
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = (event) => {
+    console.log(user.email, user.password);
+    if (user.email && user.password) {
+      firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
+        .then((userCredential) => {
+          // Signed in 
+          const user = userCredential.user;
+          const newUserInfo = { ...user };
+          newUserInfo.error = ' ';
+          newUserInfo.success = true;
+          setUser(newUserInfo);
+          // ...
+        })
+        .catch((error) => {
+          const newUserInfo = { ...user };
+          newUserInfo.error = error.message;
+
+          newUserInfo.success = false;
+          setUser(newUserInfo);
+          // ..
+        });
+    }
+    event.preventDefault()
 
   }
 
@@ -65,9 +89,9 @@ function App() {
     console.log(event.target.name, event.target.value);
 
     // email and password validation method
-    let ifFormValid = true;
+    let isFieldValid = true;
     if (event.target.name === 'email') {
-      ifFormValid = /\S+@\S+\.\S+/.test(event.target.value);
+      isFieldValid = /\S+@\S+\.\S+/.test(event.target.value);
 
 
     }
@@ -76,9 +100,9 @@ function App() {
       const checkPasswordValid = event.target.value.length > 6;
 
       const checkPasswordNumber = /\d{1}/.test(event.target.value);
-      ifFormValid = checkPasswordValid && checkPasswordNumber;
+      isFieldValid = checkPasswordValid && checkPasswordNumber;
     }
-    if (ifFormValid) {
+    if (isFieldValid) {
       const newUserInfo = { ...user };
       newUserInfo[event.target.name] = event.target.value;
       setUser(newUserInfo);
@@ -103,18 +127,22 @@ function App() {
         </div>
       }
       <h1>Our Authentication system</h1>
-      <p>name: {user.name}</p>
+      {/* <p>name: {user.name}</p>
       <p>email: {user.email}</p>
-      <p>password: {user.password}</p>
+      <p>password: {user.password}</p> */}
 
       <form onSubmit={handleSubmit}>
-        <input type="text" onBlur={handleBlur} required name="name" id="" placeholder="enter your name" />
+        <input type="text" onBlur={handleBlur} name="name" id="" placeholder="enter your name" />
 
         <br />
         <input type="email" onBlur={handleBlur} required name="email" id="" placeholder="enter your email" /> <br />
         <input type="password" onBlur={handleBlur} required name="password" placeholder="enter your password" id="" /> <br />
         <input type="submit" name="signup" value="Sign Up" />
       </form>
+      <p style={{ color: 'red' }}>{user.error}</p>
+      {
+        user.success && <p style={{color:'green'}}>User Created successfully</p>
+      }
     </div>
   );
 }
