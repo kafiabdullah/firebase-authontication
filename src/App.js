@@ -65,18 +65,24 @@ function App() {
     console.log(event.target.name, event.target.value);
 
     // email and password validation method
+    let ifFormValid = true;
     if (event.target.name === 'email') {
-      const isEmailValid = /\S+@\S+\.\S+/.test(event.target.value);
-      console.log(isEmailValid);
+      ifFormValid = /\S+@\S+\.\S+/.test(event.target.value);
+
 
     }
 
     if (event.target.name === 'password') {
       const checkPasswordValid = event.target.value.length > 6;
-      
 
       const checkPasswordNumber = /\d{1}/.test(event.target.value);
-      console.log(checkPasswordValid && checkPasswordNumber);
+      ifFormValid = checkPasswordValid && checkPasswordNumber;
+    }
+    if (ifFormValid) {
+      const newUserInfo = { ...user };
+      newUserInfo[event.target.name] = event.target.value;
+      setUser(newUserInfo);
+
     }
   }
 
@@ -97,7 +103,14 @@ function App() {
         </div>
       }
       <h1>Our Authentication system</h1>
+      <p>name: {user.name}</p>
+      <p>email: {user.email}</p>
+      <p>password: {user.password}</p>
+
       <form onSubmit={handleSubmit}>
+        <input type="text" onBlur={handleBlur} required name="name" id="" placeholder="enter your name" />
+
+        <br />
         <input type="email" onBlur={handleBlur} required name="email" id="" placeholder="enter your email" /> <br />
         <input type="password" onBlur={handleBlur} required name="password" placeholder="enter your password" id="" /> <br />
         <input type="submit" name="signup" value="Sign Up" />
